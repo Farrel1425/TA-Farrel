@@ -3,7 +3,10 @@ nixPkgs = ['php82', 'php82Packages.composer', 'nodejs_20']
 
 [phases.build]
 cmds = [
-  'composer install',
+  "php artisan migrate --force",
+  "php artisan config:cache",
+  "php artisan route:cache",
+  "npm run build"
 ]
 
 [phases.start]
