@@ -19,7 +19,6 @@ return new class extends Migration
             $table->date('tanggal_kembali')->nullable();
             $table->enum('status', ['Dipinjam', 'Dikembalikan', 'Terlambat'])->default('Dipinjam');
             $table->integer('denda')->default(0);
-            $table->enum('denda_status', ['Belum Lunas', 'Lunas'])->default('Belum Lunas');
             $table->unsignedBigInteger('id_petugas_pengembalian')->nullable();
 
             $table->timestamps();
@@ -27,12 +26,7 @@ return new class extends Migration
             // Foreign keys
             $table->foreign('id_peminjaman')->references('id')->on('peminjaman')->onDelete('cascade');
             $table->foreign('id_buku')->references('id')->on('buku')->onDelete('cascade');
-
-            /**
-             * ✅ Foreign key untuk petugas pengembalian
-             * onDelete('set null') = jika petugas dihapus, data pengembalian tetap ada
-             */
-            $table->foreign('id_petugas_pengembalian')->references('id')->on('petugas')->onDelete('set null');
+            $table->foreign('id_petugas_pengembalian')->references('id')->on('users')->onDelete('set null');
         });
     }
 

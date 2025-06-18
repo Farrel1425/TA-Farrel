@@ -57,9 +57,8 @@
                     <th>Anggota</th>
                     <th>Petugas</th>
                     <th>Tgl Pinjam</th>
-                    <th>Tgl Kembali</th>
+                    <th>Tgl Harus Kembali</th>
                     <th>Status</th>
-                    <th>Denda</th>
                     <th>Aksi</th>
                 </tr>
             </thead>
@@ -77,30 +76,9 @@
                         <td class="text-center">
                             <span class="badge bg-info">{{ $peminjaman->formatted_tanggal_pinjam ?? '-' }}</span>
                         </td>
-                        <td class="text-center">
-                           @if($peminjaman->formatted_tanggal_kembali)
-                                <span class="badge bg-success">{{ $peminjaman->formatted_tanggal_kembali }}</span>
-                            @else
-                                <span class="text-muted">-</span>
-                            @endif
-                        </td>
-                        <td class="text-center">
-                            <span class="badge
-                                @if(strtolower($peminjaman->status) === 'dipinjam') bg-danger
-                                @elseif(strtolower($peminjaman->status) === 'dikembalikan') bg-success
-                                @else bg-secondary
-                                @endif">
-                                {{ ucfirst($peminjaman->status) }}
-                            </span>
-                        </td>
-                        <td class="text-center">
-                            @if($peminjaman->formatted_denda)
-                                <span class="badge bg-warning text-dark">{{ $peminjaman->formatted_denda }}</span>
-                            @else
-                                <span class="text-muted">-</span>
-                            @endif
-                        </td>
-
+                        <td>{{ $peminjaman->tanggal_harus_kembali->format('d-m-Y') }}</td>
+                        <td>{{ $peminjaman->status_peminjaman}}</td>
+                        {{ $peminjaman->formatted_denda }}
                         <td class="text-center">
                             <div class="btn-group btn-group-sm">
                                 <a href="{{ route('petugas.peminjaman.show', $peminjaman->id) }}" class="btn btn-info" title="Detail"><i class="fas fa-eye"></i></a>
@@ -113,7 +91,7 @@
                     </tr>
                 @empty
                     <tr>
-                        <td colspan="7" class="text-center text-muted py-4">
+                        <td colspan="8" class="text-center text-muted py-4">
                             <i class="fas fa-book fa-2x mb-2"></i>
                             <p class="mb-0">Belum ada data peminjaman</p>
                         </td>

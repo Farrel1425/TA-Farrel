@@ -1,67 +1,49 @@
 @extends('layouts.petugas')
 
-@section('title', 'Data Pengembalian Buku')
+@section('title', 'Daftar Pengembalian Buku')
 
 @section('content')
 <div class="container mt-4">
-    <h4>Data Pengembalian Buku</h4>
+    <h4>Daftar Transaksi Belum Selesai</h4>
+    <p class="text-muted">Berikut daftar transaksi peminjaman yang masih memiliki buku yang belum dikembalikan.</p>
+    <hr>
 
-    @if(session('success'))
-        <div class="alert alert-success">{{ session('success') }}</div>
-    @elseif(session('error'))
-        <div class="alert alert-danger">{{ session('error') }}</div>
-    @endif
-
-    <div class="card shadow-sm mt-3">
-        <div class="card-body table-responsive">
-            <table class="table table-bordered table-hover">
-                <thead class="table-dark">
+    @if($peminjamanAktif->isEmpty())
+        <div class="alert alert-info">Semua buku telah dikembalikan.</div>
+    @else
+        <table class="table table-bordered table-striped">
+            <thead class="table-dark">
+                <tr>
+                    <th>No</th>
+                    <th>Nama Anggota</th>
+                    <th>Tanggal Pinjam</th>
+                    <th>Jumlah Belum Kembali</th>
+                    <th>Aksi</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach($peminjamanAktif as $index => $peminjaman)
+                    @php
+                        $belumKembali = $peminjaman->details->where('status', 'Dipinjam')->count();
+                    @endphp
                     <tr>
-                        <th>#</th>
-                        <th>Anggota</th>
-                        <th>Judul Buku</th>
-                        <th>Tgl Pinjam</th>
-                        <th>Tgl Harus Kembali</th>
-                        <th>Tgl Kembali</th>
-                        <th>Status</th>
-                        <th>Denda</th>
-                        <th>Petugas</th>
+                        <td>{{ $index + 1 }}</td>
+                        <td>{{ $peminjaman->anggota->nama_anggota }}</td>
+                        <td>{{ \Carbon\Carbon::parse($peminjaman->tanggal_pinjam)->format('d M Y') }}</td>
+                        <td>
+                            <span class="badge bg-warning text-dark">
+                                {{ $belumKembali }} Buku
+                            </span>
+                        </td>
+                        <td>
+                            <a href="{{ route('petugas.pengembalian.show', $peminjaman->id) }}" class="btn btn-primary btn-sm">
+                                Lihat Detail
+                            </a>
+                        </td>
                     </tr>
-                </thead>
-                <tbody>
-                    @forelse ($peminjamans as $item)
-                        <tr>
-                            <td>{{ $loop->iteration }}</td>
-                            <td>{{ $item->anggota->nama ?? '-' }}</td>
-                            <td>{{ $item->buku->judul ?? '-' }}</td>
-                            <td>{{ \Carbon\Carbon::parse($item->tanggal_pinjam)->format('d-m-Y') }}</td>
-                            <td>{{ \Carbon\Carbon::parse($item->tanggal_harus_kembali)->format('d-m-Y') }}</td>
-                            <td>{{ optional($item->detail)->tanggal_kembali ? $item->detail->tanggal_kembali->format('d-m-Y') : '-' }}</td>
-
-                            <td>
-                                <span class="badge {{ $item->status === 'Terlambat' ? 'bg-danger' : 'bg-success' }}">
-                                    {{ $item->status }}
-                                </span>
-                            </td>
-                            <td>
-                                @if($item->denda)
-                                    {!! $item->denda->status_label !!}
-                                    <br>
-                                    <small>Rp {{ number_format($item->denda->jumlah, 0, ',', '.') }}</small>
-                                @else
-                                    <span class="badge bg-secondary">Tidak Ada</span>
-                                @endif
-                            </td>
-                            <td>{{ $item->petugas->nama ?? '-' }}</td>
-                        </tr>
-                    @empty
-                        <tr>
-                            <td colspan="9" class="text-center">Belum ada data pengembalian.</td>
-                        </tr>
-                    @endforelse
-                </tbody>
-            </table>
-        </div>
-    </div>
+                @endforeach
+            </tbody>
+        </table>
+    @endif
 </div>
 @endsection

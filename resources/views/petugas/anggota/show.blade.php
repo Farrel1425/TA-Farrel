@@ -17,6 +17,7 @@
                 <strong>Alamat:</strong> {{ $anggota->alamat }} <br>
                 <strong>Jenis Kelamin:</strong> {{ $anggota->jenis_kelamin }} <br>
                 <strong>Status:</strong> {{ $anggota->status_anggota }}
+                <strong>Username:</strong> {{ $anggota->user->username ?? '-' }}
             </p>
 
             <a href="{{ route('petugas.anggota.index') }}" class="btn btn-secondary">Kembali</a>

@@ -49,7 +49,6 @@ class Denda extends Model
         return match ($this->status_denda) {
             'Lunas' => '<span class="badge bg-success">Lunas</span>',
             'Belum Lunas' => '<span class="badge bg-warning text-dark">Belum Lunas</span>',
-            'Dibebaskan' => '<span class="badge bg-info text-dark">Dibebaskan</span>',
             default => '<span class="badge bg-secondary">-</span>',
         };
     }

@@ -73,11 +73,14 @@ class PeminjamanController extends Controller
     }
 
     // Menampilkan detail satu peminjaman
-    public function show(Peminjaman $peminjaman)
+    public function show($id)
     {
-        $peminjaman->load(['anggota', 'petugas', 'details.buku']);
+        $peminjaman = Peminjaman::with(['anggota', 'petugas', 'details.peminjaman','details.buku'])->findOrFail($id);
+
         return view('petugas.peminjaman.show', compact('peminjaman'));
     }
+
+
 
     // Menampilkan form edit untuk peminjaman
     public function edit(Peminjaman $peminjaman)

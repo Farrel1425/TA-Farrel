@@ -62,11 +62,23 @@ Route::middleware(['auth', 'role:petugas'])->prefix('petugas')->name('petugas.')
 
     Route::resource('peminjaman', PeminjamanController::class);
     Route::patch('peminjaman/{peminjaman}/kembalikan', [PeminjamanController::class, 'kembalikan'])->name('petugas.peminjaman.kembalikan');
+
     Route::resource('denda', DendaController::class);
     Route::post('denda/{denda}/bayar', [DendaController::class, 'bayar'])->name('petugas.denda.bayar');
-    Route::resource('pengembalian', PengembalianController::class);
 
-     Route::get('/kunjungan', [PetugasKunjunganController::class, 'index'])->name('kunjungan.index');
+    Route::resource('pengembalian', PengembalianController::class);
+    // Route untuk tombol Kembalikan
+    Route::put('/pengembalian/{id}/kembalikan', [PengembalianController::class, 'kembalikan'])
+    ->name('pengembalian.kembalikan');
+
+      // Fitur Baru: Pengembalian Buku (per transaksi)
+    Route::resource('pengembalian', PengembalianController::class)->only(['index', 'show']);
+
+    // Aksi tombol "Kembalikan" per buku
+    Route::put('/pengembalian/{detail}/kembalikan', [PengembalianController::class, 'kembalikan'])
+        ->name('pengembalian.kembalikan');
+
+    Route::get('/kunjungan', [PetugasKunjunganController::class, 'index'])->name('kunjungan.index');
 
 });
 

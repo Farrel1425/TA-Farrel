@@ -40,6 +40,13 @@ return [
             'driver' => 'session',
             'provider' => 'users',
         ],
+
+     // Mengambil data untuk peminjaman dan pengembalian buku
+        'petugas' => [
+            'driver' => 'session',
+            'provider' => 'petugas',
+        ],
+
     ],
 
     /*
@@ -63,6 +70,12 @@ return [
         'users' => [
             'driver' => 'eloquent',
             'model' => env('AUTH_MODEL', App\Models\User::class),
+        ],
+
+    // Mengambil data untuk peminjaman dan pengembalian buku
+        'petugas' => [
+            'driver' => 'eloquent',
+            'model' => App\Models\Petugas::class,
         ],
 
         // 'users' => [

@@ -367,9 +367,9 @@
                 }
             } else if (statusFilter === 'tidak tersedia') {
                 if (searchTerm === '') {
-                    countText = `Total: ${this.tidakTersediaCount} buku tidak tersedia`;
+                    countText = `Total: ${this.tidakTersediaCount} tidak tersedia`;
                 } else {
-                    countText = `Ditemukan: ${visibleCount} dari ${this.tidakTersediaCount} buku tidak tersedia`;
+                    countText = `Ditemukan: ${visibleCount} dari ${this.tidakTersediaCount} tidak tersedia`;
                 }
             } else {
                 // Jika ada pencarian tapi tidak ada filter status

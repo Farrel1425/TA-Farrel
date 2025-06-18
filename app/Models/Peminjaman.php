@@ -30,29 +30,37 @@ class Peminjaman extends Model
      */
     protected $casts = [
         'tanggal_pinjam' => 'datetime',
-        'tanggal_kembali' => 'datetime',
-        'tanggal_harus_kembali' => 'datetime'
+        'tanggal_harus_kembali' => 'datetime',
     ];
 
 
+    // public function getFormattedDendaAttribute()
+    // {
+    //     return $this->denda > 0
+    //         ? 'Rp ' . number_format($this->denda, 0, ',', '.')
+    //         : '-';
+    // }
 
-    public function getDendaAttribute()
+
+    public function getStatusPeminjamanAttribute(): string
     {
-        // Hitung hanya jika status masih 'dipinjam' dan tanggal harus kembali sudah lewat
-        if ($this->status === 'dipinjam' && $this->tanggal_harus_kembali) {
-            $hariIni = Carbon::today();
-            $tanggalHarusKembali = Carbon::parse($this->tanggal_harus_kembali);
-
-            if ($tanggalHarusKembali->lessThan($hariIni)) {
-                $jumlahHariTerlambat = $tanggalHarusKembali->diffInDays($hariIni);
-                return $jumlahHariTerlambat * 1000; // tarif denda per hari
-            }
+        if ($this->details->every(fn($d) => $d->status === 'Dikembalikan')) {
+            return 'Selesai';
         }
 
-        return 0;
+        if ($this->details->contains(fn($d) => $d->status === 'Terlambat')) {
+            return 'Terlambat';
+        }
+
+        return 'Dipinjam';
     }
 
-
+    public function getTotalDendaAttribute()
+    {
+        return $this->details->sum(function ($detail) {
+            return $detail->denda;
+        });
+    }
     /* ==================== RELASI ==================== */
 
     /**
@@ -82,10 +90,12 @@ class Peminjaman extends Model
     /**
      * Relasi ke PeminjamanDetail (One-to-Many)
      */
-    public function details(): HasMany
+    public function details()
     {
-        return $this->hasMany(PeminjamanDetail::class, 'id_peminjaman');
+        return $this->hasMany(\App\Models\PeminjamanDetail::class, 'id_peminjaman');
     }
+
+
 
     /* ==================== METHOD CUSTOM ==================== */
 
@@ -135,11 +145,5 @@ class Peminjaman extends Model
         return optional($this->tanggal_kembali)->format('d-m-Y');
     }
 
-    public function getFormattedDendaAttribute()
-    {
-        return $this->denda > 0
-            ? 'Rp ' . number_format($this->denda, 0, ',', '.')
-            : null;
-    }
 
 }
