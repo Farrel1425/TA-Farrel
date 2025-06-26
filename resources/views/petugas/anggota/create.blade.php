@@ -20,26 +20,15 @@
     <form action="{{ route('petugas.anggota.store') }}" method="POST">
         @csrf
 
-        <!-- Input untuk User -->
-        <div class="mb-3">
-            <label for="name" class="form-label">Nama User</label>
-            <input type="text" name="name" id="name" class="form-control" value="{{ old('name') }}" required>
-        </div>
-
-        <div class="mb-3">
-            <label for="email" class="form-label">Email User</label>
-            <input type="email" name="email" id="email" class="form-control" value="{{ old('email') }}" required>
-        </div>
-
         <!-- Input untuk anggota -->
-        <div class="mb-3">
-            <label for="nis" class="form-label">NIS</label>
-            <input type="text" name="nis" id="nis" class="form-control" value="{{ old('nis') }}" required>
-        </div>
-
         <div class="mb-3">
             <label for="nama_anggota" class="form-label">Nama Lengkap</label>
             <input type="text" name="nama_anggota" id="nama_anggota" class="form-control" value="{{ old('nama_anggota') }}" required>
+        </div>
+
+        <div class="mb-3">
+            <label for="nis" class="form-label">NIS</label>
+            <input type="text" name="nis" id="nis" class="form-control" value="{{ old('nis') }}" required>
         </div>
 
         <div class="mb-3">

@@ -14,12 +14,8 @@ class UserSeeder extends Seeder
     {
         // Admin
         User::create([
-            'name' => 'Admin Utama',
             'username' => 'admin1',
-            'email' => 'admin@example.com',
-            'email_verified_at' => now(),
-            'password' => Hash::make('12345678'), // ganti password jika perlu
-            'remember_token' => Str::random(10),
+            'password' => Hash::make('123123'), // ganti password jika perlu
             'level_user' => 'admin',
             'created_at' => now(),
             'updated_at' => now(),
@@ -27,9 +23,7 @@ class UserSeeder extends Seeder
 
         // ========== PETUGAS ==========
         $petugasUserId = DB::table('users')->insertGetId([
-            'name' => 'Farrel',
             'username' => 'Farrel',
-            'email' => 'petugas1@example.com',
             'password' => Hash::make('123123'), // password default
             'level_user' => 'petugas',
             'created_at' => now(),
@@ -38,7 +32,7 @@ class UserSeeder extends Seeder
 
         DB::table('petugas')->insert([
             'id_user' => $petugasUserId,
-            'nama_petugas' => 'Farrel',
+            'nama_petugas' => 'Made Farrel Sind Cahyadi',
             'no_hp' => '081234567890',
             'alamat' => 'Jl. Petugas Nomor 1',
             'jenis_kelamin' => 'Laki-laki',
@@ -49,9 +43,7 @@ class UserSeeder extends Seeder
 
         // ========== ANGGOTA ==========
         $anggotaUserId = DB::table('users')->insertGetId([
-            'name' => 'Putra',
-            'username' => 'Putra',
-            'email' => 'anggota1@example.com',
+            'username' => '220030060',
             'password' => Hash::make('123123'), // password default
             'level_user' => 'anggota',
             'created_at' => now(),
@@ -61,10 +53,10 @@ class UserSeeder extends Seeder
         DB::table('anggota')->insert([
             'id_user' => $anggotaUserId,
             'nis' => '220030060',
-            'nama_anggota' => 'Putra',
+            'nama_anggota' => 'Putu Putra Wibawa',
             'no_hp' => '089876543210',
             'alamat' => 'Jl. Anggota Nomor 1',
-            'jenis_kelamin' => 'Perempuan',
+            'jenis_kelamin' => 'Laki-laki',
             'status_anggota' => 'Aktif',
             'created_at' => now(),
             'updated_at' => now(),

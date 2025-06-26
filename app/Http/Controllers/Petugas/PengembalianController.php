@@ -53,22 +53,47 @@ class PengembalianController extends Controller
         try {
             $today = Carbon::now();
             $tanggalHarusKembali = Carbon::parse($detail->peminjaman->tanggal_harus_kembali);
-            $selisihHari = (int) $today->diffInDays($tanggalHarusKembali, false);
+            $selisihHari = $today->diffInDays($tanggalHarusKembali, false);
+            $jumlahDenda = $today->greaterThan($tanggalHarusKembali) ? $selisihHari * 1000 : 0;
 
-            $jumlahDenda = $selisihHari * 1000;
+             // ✅ Kembalikan stok buku
+            $detail->buku->increment('stok');
+
+            // ✅ Update status buku menjadi "Tersedia" jika stok > 0
+            if ($detail->buku->stok > 0 && $detail->buku->status_buku !== 'Tersedia') {
+                $detail->buku->update(['status_buku' => 'Tersedia']);
+            }
 
             $detail->update([
                 'tanggal_kembali' => $today,
                 'status' => 'Dikembalikan',
                 'denda' => abs($jumlahDenda),
-                'id_petugas_pengembalian' => Auth::id(), // PAKAI user ID dari tabel users
+                'id_petugas_pengembalian' => Auth::user()->petugas->id ?? null,
             ]);
-            // denda::create([
-            //     'id_peminjaman_detail' => $detail->id,
-            //     'jumlah_denda' => abs($jumlahDenda),
-            //     'tanggal_dibayar' => $today,
-            // ]);
 
+         // Cek apakah semua buku sudah dikembalikan
+        $peminjaman = Peminjaman::with('details')->find($detail->id_peminjaman);
+
+        $semuaSudahKembali = $peminjaman->details->every(function ($d) {
+            return in_array($d->status, ['Dikembalikan', 'Terlambat']);
+        });
+
+        if ($semuaSudahKembali) {
+            // Cek apakah denda sudah pernah disimpan sebelumnya
+            $sudahAdaDenda = $peminjaman->denda()->exists();
+
+            if (!$sudahAdaDenda) {
+                $totalDenda = $peminjaman->details->sum('denda');
+
+                \App\Models\Denda::create([
+                    'id_peminjaman' => $peminjaman->id,
+                    'jumlah' => $totalDenda,
+                    'status_denda' => $totalDenda > 0 ? 'Belum Lunas' : 'Lunas',
+                    'tanggal_pembayaran' => null,
+                    'id_petugas' => Auth::user()->petugas->id ?? null,
+                ]);
+            }
+        }
 
             DB::commit();
             return back()->with('success', 'Buku berhasil dikembalikan.');

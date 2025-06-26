@@ -14,13 +14,8 @@ return new class extends Migration
         Schema::create('users', function (Blueprint $table) {
             // Default columns Breeze
             $table->id();
-            $table->string('name')->nullable();
-            $table->string('email')->unique();
-            $table->timestamp('email_verified_at')->nullable();
             $table->string('password');
             $table->rememberToken();
-            
-            // Tambahan untuk sistem perpustakaan
             $table->enum('level_user', ['admin', 'petugas', 'anggota'])->default('anggota');
             $table->string('username')->unique(); // Opsional jika ingin login dengan username
             $table->timestamps();
@@ -31,7 +26,7 @@ return new class extends Migration
      * Reverse the migrations.
      */
     public function down()
-    {  
+    {
         Schema::dropIfExists('users');
       }
 };

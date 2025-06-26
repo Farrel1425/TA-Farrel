@@ -63,7 +63,7 @@
 
     <div class="table-responsive mt-3">
         <table class="table table-bordered table-striped table-hover" id="memberTable">
-            <thead class="table-dark">
+            <thead style="background-color: #2563eb; color: white;">
                 <tr class="text-center">
                     <th class="align-middle" style="width: 50px;">No</th>
                     <th class="align-middle" style="width: 120px;">NIS</th>
@@ -100,29 +100,29 @@
                         <td class="text-center align-middle">
                             <div class="btn-group btn-group-sm" role="group">
                                 <a href="{{ route('petugas.anggota.show', $item->id) }}"
-                                   class="btn btn-info" title="Detail">
-                                    <i class="fas fa-eye"></i>
-                                </a>
-                                <a href="{{ route('petugas.anggota.edit', $item->id) }}"
-                                   class="btn btn-warning" title="Edit">
-                                    <i class="fas fa-edit"></i>
-                                </a>
-                                <button class="btn btn-danger delete-btn"
-                                        onclick="confirmDelete('{{ $item->nama_anggota }}', '{{ route('petugas.anggota.destroy', $item->id) }}')"
-                                        title="Hapus">
-                                    <i class="fas fa-trash"></i>
-                                </button>
-                            </div>
-                        </td>
-                    </tr>
-                @empty
-                    <tr id="emptyRow">
-                        <td colspan="7" class="text-center text-muted py-4">
-                            <i class="fas fa-users fa-2x mb-2"></i>
-                            <p class="mb-0">Belum ada anggota yang tersedia</p>
-                        </td>
-                    </tr>
-                @endforelse
+                class="btn btn-info" title="Detail">
+                    <i class="fas fa-eye"></i>
+                </a>
+                <a href="{{ route('petugas.anggota.edit', $item->id) }}"
+                class="btn btn-warning" title="Edit">
+                    <i class="fas fa-edit"></i>
+                </a>
+                <button class="btn btn-danger delete-btn"
+                        onclick="confirmDelete('{{ $item->nama_anggota }}', '{{ route('petugas.anggota.destroy', $item->id) }}')"
+                        title="Hapus">
+                    <i class="fas fa-trash"></i>
+                </button>
+            </div>
+        </td>
+    </tr>
+                        @empty
+                            <tr id="emptyRow">
+                                <td colspan="7" class="text-center text-muted py-4">
+                                    <i class="fas fa-users fa-2x mb-2"></i>
+                                    <p class="mb-0">Belum ada anggota yang tersedia</p>
+                                </td>
+                            </tr>
+                        @endforelse
             </tbody>
         </table>
     </div>

@@ -1,48 +1,50 @@
 @extends('layouts.petugas')
 
+@section('title', 'Daftar Denda')
+
 @section('content')
-<div class="container">
-    <h4>Data Denda</h4>
+<div class="container mt-4">
+    <h4>Daftar Transaksi dengan Denda</h4>
+    <p class="text-muted">Berikut daftar transaksi peminjaman yang memiliki denda keterlambatan.</p>
+    <hr>
 
-    <a href="{{ route('petugas.denda.create') }}" class="btn btn-primary mb-3">+ Tambah Denda</a>
-
-    @if(session('success'))
-        <div class="alert alert-success">{{ session('success') }}</div>
-    @endif
-
-    <table class="table table-bordered">
-        <thead>
-            <tr>
-                <th>ID</th>
-                <th>Nama Anggota</th>
-                <th>Jumlah</th>
-                <th>Status</th>
-                <th>Tgl Bayar</th>
-                <th>Petugas</th>
-                <th>Aksi</th>
-            </tr>
-        </thead>
-        <tbody>
-            @foreach($denda as $item)
+    @if($denda->isEmpty())
+        <div class="alert alert-info">Tidak ada transaksi yang memiliki denda.</div>
+    @else
+        <table class="table table-bordered table-striped">
+            <thead style="background-color: #2563eb; color: white;" class="text-center">
                 <tr>
-                    <td>{{ $item->id }}</td>
-                    <td>{{ $item->peminjaman->anggota->nama ?? '-' }}</td>
-                    <td>@currency($peminjaman->denda)</td>
-                    <td>{{ $item->status_denda }}</td>
-                    <td>{{ $item->tanggal_pembayaran ?? '-' }}</td>
-                    <td>{{ $item->petugas->nama ?? '-' }}</td>
+                    <th>No</th>
+                    <th>Nama Anggota</th>
+                    <th>Tanggal Pinjam</th>
+                    <th>Total Denda</th>
+                    <th>Status Denda</th>
+                    <th>Aksi</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach ($denda as $index => $item)
+                <tr>
+                    <td>{{ $index + 1 }}</td>
+                    <td>{{ $item->peminjaman->anggota->nama_anggota }}</td>
+                    <td>{{ \Carbon\Carbon::parse($item->peminjaman->tanggal_pinjam)->format('d M Y') }}</td>
                     <td>
-                        <a href="{{ route('petugas.denda.edit', $item->id) }}" class="btn btn-sm btn-warning">Edit</a>
-                        <form action="{{ route('petugas.denda.destroy', $item->id) }}" method="POST" class="d-inline"
-                              onsubmit="return confirm('Yakin ingin menghapus?')">
-                            @csrf
-                            @method('DELETE')
-                            <button class="btn btn-sm btn-danger">Hapus</button>
-                        </form>
+                        <span class="badge bg-danger">
+                            Rp{{ number_format($item->jumlah, 0, ',', '.') }}
+                        </span>
+                    </td>
+                    <td>
+                        <span class="badge {{ $item->status_denda === 'Lunas' ? 'bg-success' : 'bg-warning text-dark' }}">
+                            {{ $item->status_denda }}
+                        </span>
+                    </td>
+                    <td>
+                        <a href="{{ route('petugas.denda.show', $item->id) }}" class="btn btn-info btn-sm">Detail</a>
                     </td>
                 </tr>
-            @endforeach
-        </tbody>
-    </table>
+                @endforeach
+            </tbody>
+        </table>
+    @endif
 </div>
 @endsection

@@ -51,7 +51,7 @@
     {{-- Tabel --}}
     <div class="table-responsive">
         <table class="table table-bordered table-hover table-striped" id="peminjamanTable">
-            <thead class="table-dark text-center">
+            <thead style="background-color: #2563eb; color: white;" class = "text-center">
                 <tr>
                     <th>No</th>
                     <th>Anggota</th>

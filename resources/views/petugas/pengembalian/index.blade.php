@@ -12,7 +12,7 @@
         <div class="alert alert-info">Semua buku telah dikembalikan.</div>
     @else
         <table class="table table-bordered table-striped">
-            <thead class="table-dark">
+            <thead style="background-color: #2563eb; color: white;" class="text-center">
                 <tr>
                     <th>No</th>
                     <th>Nama Anggota</th>

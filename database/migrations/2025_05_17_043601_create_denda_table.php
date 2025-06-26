@@ -23,7 +23,7 @@ return new class extends Migration
             // Foreign keys
             $table->foreign('id_peminjaman')->references('id')->on('peminjaman')->onDelete('cascade');
 
-            $table->foreign('id_petugas')->references('id')->on('petugas')->onDelete('set null');
+            $table->foreign('id_petugas')->references('id')->on('users')->onDelete('set null');
         });
     }
 

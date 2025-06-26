@@ -24,7 +24,7 @@
     @if($kunjungan->count())
         <div class="table-responsive">
             <table class="table table-bordered table-striped table-hover" id="visitTable">
-                <thead class="table-dark">
+                <thead style="background-color: #2563eb; color: white;">
                     <tr class="text-center">
                         <th class="align-middle" style="width: 50px;">No</th>
                         <th class="align-middle">Nama Anggota</th>

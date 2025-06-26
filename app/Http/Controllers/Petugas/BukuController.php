@@ -33,10 +33,20 @@ class BukuController extends Controller
             'tahun_terbit'  => 'required|digits:4|integer|min:1900|max:' . date('Y'),
             'stok'          => 'required|integer|min:0',
             'id_kategori'   => 'required|exists:kategori,id',
-            'status_buku'   => 'required|in:Tersedia,Tidak Tersedia',
+            // 'status_buku'   => 'required|in:Tersedia,Tidak Tersedia',
         ]);
 
-        $buku = Buku::create($request->all());
+         $statusBuku = $request->stok > 0 ? 'Tersedia' : 'Tidak Tersedia';
+
+        $buku = Buku::create([
+            'judul'         => $request->judul,
+            'penulis'       => $request->penulis,
+            'penerbit'      => $request->penerbit,
+            'tahun_terbit'  => $request->tahun_terbit,
+            'stok'          => $request->stok,
+            'id_kategori'   => $request->id_kategori,
+            'status_buku'   => $statusBuku,
+        ]);
 
         // Update jumlah buku pada kategori terkait
         $this->updateJumlahBuku($request->id_kategori);
@@ -68,23 +78,36 @@ class BukuController extends Controller
             'tahun_terbit'  => 'required|digits:4|integer|min:1900|max:' . date('Y'),
             'stok'          => 'required|integer|min:0',
             'id_kategori'   => 'required|exists:kategori,id',
-            'status_buku'   => 'required|in:Tersedia,Tidak Tersedia',
+            // status_buku dihapus dari validasi karena akan ditentukan otomatis
         ]);
 
         $buku = Buku::findOrFail($id);
         $oldKategoriId = $buku->id_kategori;
-        $buku->update($request->all());
 
-        // Update jumlah buku pada kategori lama dan kategori baru jika berbeda
+        // Set status buku otomatis berdasarkan stok
+        $statusBuku = $request->stok > 0 ? 'Tersedia' : 'Tidak Tersedia';
+
+        // Update buku dengan semua data dan status yang disesuaikan
+        $buku->update([
+            'judul'         => $request->judul,
+            'penulis'       => $request->penulis,
+            'penerbit'      => $request->penerbit,
+            'tahun_terbit'  => $request->tahun_terbit,
+            'stok'          => $request->stok,
+            'id_kategori'   => $request->id_kategori,
+            'status_buku'   => $statusBuku,
+        ]);
+
+        // Update jumlah buku pada kategori lama dan baru jika berbeda
         $this->updateJumlahBuku($oldKategoriId);
         if ($oldKategoriId != $request->id_kategori) {
             $this->updateJumlahBuku($request->id_kategori);
         }
 
-       return redirect()->route('petugas.buku.show', $buku->id)
-    ->with('success', 'Data buku berhasil diperbarui.');
-
+        return redirect()->route('petugas.buku.show', $buku->id)
+            ->with('success', 'Data buku berhasil diperbarui.');
     }
+
 
     // Hapus buku
     public function destroy($id)
@@ -111,14 +134,17 @@ class BukuController extends Controller
 
     public function search(Request $request)
     {
-        $search = $request->get('q');
+        $keyword = $request->q;
 
-        $bukus = Buku::where('judul', 'like', "%{$search}%")
-                    ->select('id', 'judul')
-                    ->limit(20)
-                    ->get();
+        $bukus = Buku::where('stok', '>', 0)
+            ->where('status_buku', 'Tersedia')
+            ->where('judul', 'like', "%{$keyword}%")
+            ->select('id', 'judul') // hanya ambil kolom yang dibutuhkan
+            ->limit(20)
+            ->get();
 
         return response()->json($bukus);
     }
+
 
 }

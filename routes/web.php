@@ -65,6 +65,9 @@ Route::middleware(['auth', 'role:petugas'])->prefix('petugas')->name('petugas.')
 
     Route::resource('denda', DendaController::class);
     Route::post('denda/{denda}/bayar', [DendaController::class, 'bayar'])->name('petugas.denda.bayar');
+    Route::post('/denda/{id}/lunasi', [\App\Http\Controllers\Petugas\DendaController::class, 'lunasi'])->name('denda.lunasi');
+    Route::get('/denda/{id}/export-pdf', [\App\Http\Controllers\Petugas\DendaController::class, 'exportPdf'])->name('denda.export');
+
 
     Route::resource('pengembalian', PengembalianController::class);
     // Route untuk tombol Kembalikan
@@ -87,6 +90,7 @@ Route::middleware(['auth', 'role:petugas'])->prefix('petugas')->name('petugas.')
 // Route khusus dashboard-anggota (tanpa prefix URL, tapi tetap dalam middleware role:anggota)
 Route::middleware(['auth', 'role:anggota'])->group(function () {
     Route::get('/dashboard-anggota', [AnggotaDashboardController::class, 'index'])->name('dashboard.anggota');
+    Route::get('/buku', [\App\Http\Controllers\Anggota\BukuController::class, 'index'])->name('anggota.buku.index');
 });
 
 

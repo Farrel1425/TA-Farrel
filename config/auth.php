@@ -13,10 +13,10 @@ return [
     |
     */
 
-    'defaults' => [
-        'guard' => env('AUTH_GUARD', 'web'),
-        'passwords' => env('AUTH_PASSWORD_BROKER', 'users'),
-    ],
+    // 'defaults' => [
+    //     'guard' => env('AUTH_GUARD', 'web'),
+    //     'passwords' => env('AUTH_PASSWORD_BROKER', 'users'),
+    // ],
 
     /*
     |--------------------------------------------------------------------------
@@ -47,6 +47,11 @@ return [
             'provider' => 'petugas',
         ],
 
+         'anggota' => [
+            'driver' => 'session',
+            'provider' => 'anggota',
+    ],
+
     ],
 
     /*
@@ -67,10 +72,10 @@ return [
     */
 
     'providers' => [
-        'users' => [
-            'driver' => 'eloquent',
-            'model' => env('AUTH_MODEL', App\Models\User::class),
-        ],
+        // 'users' => [
+        //     'driver' => 'eloquent',
+        //     'model' => env('AUTH_MODEL', App\Models\User::class),
+        // ],
 
     // Mengambil data untuk peminjaman dan pengembalian buku
         'petugas' => [
@@ -78,6 +83,10 @@ return [
             'model' => App\Models\Petugas::class,
         ],
 
+        'anggota' => [
+            'driver' => 'eloquent',
+            'model' => App\Models\Anggota::class, // pastikan model ini ada
+    ],
         // 'users' => [
         //     'driver' => 'database',
         //     'table' => 'users',
@@ -103,14 +112,14 @@ return [
     |
     */
 
-    'passwords' => [
-        'users' => [
-            'provider' => 'users',
-            'table' => env('AUTH_PASSWORD_RESET_TOKEN_TABLE', 'password_reset_tokens'),
-            'expire' => 60,
-            'throttle' => 60,
-        ],
-    ],
+    // 'passwords' => [
+    //     'users' => [
+    //         'provider' => 'users',
+    //         'table' => env('AUTH_PASSWORD_RESET_TOKEN_TABLE', 'password_reset_tokens'),
+    //         'expire' => 60,
+    //         'throttle' => 60,
+    //     ],
+    // ],
 
     /*
     |--------------------------------------------------------------------------
@@ -123,6 +132,6 @@ return [
     |
     */
 
-    'password_timeout' => env('AUTH_PASSWORD_TIMEOUT', 10800),
+    // 'password_timeout' => env('AUTH_PASSWORD_TIMEOUT', 10800),
 
 ];

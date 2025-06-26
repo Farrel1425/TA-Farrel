@@ -31,8 +31,9 @@ class PeminjamanDetail extends Model
 
     public function petugas_pengembalian()
     {
-        return $this->belongsTo(User::class, 'id_petugas_pengembalian');
+        return $this->belongsTo(\App\Models\Petugas::class, 'id_petugas_pengembalian');
     }
+
 
     public function getDendaAttribute()
     {

@@ -49,13 +49,6 @@
                     </a>
                 </li>
                 <li class="nav-item">
-                    <a href="{{ route('petugas.kunjungan.index') }}" class="nav-link" data-page="kunjungan">
-                        <i class="fas fa-door-open"></i>
-                        <i class="fas fa-spinner fa-spin loading-spinner" style="display: none;"></i>
-                        <span class="menu-text">Kunjungan</span>
-                    </a>
-                </li>
-                <li class="nav-item">
                     <a href="{{ route('petugas.peminjaman.index') }}" class="nav-link" data-page="peminjaman">
                         <i class="fas fa-book-reader"></i>
                         <i class="fas fa-spinner fa-spin loading-spinner" style="display: none;"></i>
@@ -74,6 +67,13 @@
                         <i class="fas fa-money-bill-wave"></i>
                         <i class="fas fa-spinner fa-spin loading-spinner" style="display: none;"></i>
                         <span class="menu-text">Denda</span>
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a href="{{ route('petugas.kunjungan.index') }}" class="nav-link" data-page="kunjungan">
+                        <i class="fas fa-door-open"></i>
+                        <i class="fas fa-spinner fa-spin loading-spinner" style="display: none;"></i>
+                        <span class="menu-text">Kunjungan</span>
                     </a>
                 </li>
                 <li class="nav-item">

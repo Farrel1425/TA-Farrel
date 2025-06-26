@@ -25,8 +25,6 @@ class AnggotaController extends Controller
     public function store(Request $request)
     {
         $request->validate([
-            'name'           => 'required|string|max:255',
-            'email'          => 'required|email|unique:users,email',
             'nis'            => 'required|string|unique:anggota,nis',
             'nama_anggota'   => 'required|string|max:255',
             'no_hp'          => 'required|string|max:20',
@@ -36,10 +34,8 @@ class AnggotaController extends Controller
 
         // Buat user baru
         $user = User::create([
-            'name'     => $request->nama_anggota,
             'username' => $request->nis,
-            'email'    => $request->email,
-            'password' => Hash::make('123456789'),
+            'password' => Hash::make('123123'),
         ]);
 
         // Buat data anggota dan simpan ke variabel
@@ -75,8 +71,6 @@ class AnggotaController extends Controller
         $user = $anggota->user;
 
         $request->validate([
-            'name'           => 'required|string|max:255',
-            'email'          => 'required|email|unique:users,email,' . $user->id,
             'nis'            => 'required|string|unique:anggota,nis,' . $anggota->id,
             'nama_anggota'   => 'required|string|max:255',
             'no_hp'          => 'required|string|max:20',
@@ -87,8 +81,6 @@ class AnggotaController extends Controller
 
         // Update user
         $user->update([
-            'name'  => $request->name,
-            'email' => $request->email,
         ]);
 
         // Update anggota

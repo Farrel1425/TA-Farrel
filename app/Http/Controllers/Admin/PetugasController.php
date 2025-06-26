@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
+use App\Models\Peminjaman;
 use App\Models\Petugas;
 use App\Models\User;
 use Illuminate\Http\Request;
@@ -25,39 +26,34 @@ class PetugasController extends Controller
     public function store(Request $request)
     {
         $validated = $request->validate([
-            // User
-            'name'           => 'required|string|max:255',
             'username'       => 'required|string|max:100|unique:users',
-            'email'          => 'required|email|unique:users',
             'password'       => 'required|string|min:6',
-
-            // Petugas
             'nama_petugas'   => 'required|string|max:100',
-            'no_hp'          => 'required|string|max:15',
-            'alamat'         => 'required|string',
-            'jenis_kelamin'  => 'required|in:Laki-laki,Perempuan',
-            'status'         => 'required|in:Aktif,Cuti,Resign',
+            'no_hp'          => 'nullable|string|max:20',
+            'alamat'         => 'nullable|string',
+            'jenis_kelamin'  => 'nullable|in:Laki-laki,Perempuan',
         ]);
 
+        // Simpan ke tabel users
         $user = User::create([
-            'name'        => $validated['name'],
             'username'    => $validated['username'],
-            'email'       => $validated['email'],
             'password'    => Hash::make($validated['password']),
-            'level_user'  => 'petugas',
+            'level_user'  => 'petugas', // otomatis
         ]);
 
+        // Simpan ke tabel petugas
         Petugas::create([
             'id_user'       => $user->id,
             'nama_petugas'  => $validated['nama_petugas'],
-            'no_hp'         => $validated['no_hp'],
-            'alamat'        => $validated['alamat'],
-            'jenis_kelamin' => $validated['jenis_kelamin'],
-            'status'        => $validated['status'],
+            'no_hp'         => $validated['no_hp'] ?? '-',
+            'alamat'        => $validated['alamat'] ?? '-',
+            'jenis_kelamin' => $validated['jenis_kelamin'] ?? 'Laki-laki',
+            'status'        => 'Aktif', // otomatis
         ]);
 
         return redirect()->route('admin.petugas.index')->with('success', 'Petugas berhasil ditambahkan.');
     }
+
 
     public function show($id)
     {
@@ -78,9 +74,7 @@ class PetugasController extends Controller
 
         $validated = $request->validate([
             // User
-            'name'           => 'required|string|max:255',
             'username'       => 'required|string|max:100|unique:users,username,' . $user->id,
-            'email'          => 'required|email|unique:users,email,' . $user->id,
             'password'       => 'nullable|string|min:6',
 
             // Petugas
@@ -92,9 +86,7 @@ class PetugasController extends Controller
         ]);
 
         $user->update([
-            'name'     => $validated['name'],
             'username' => $validated['username'],
-            'email'    => $validated['email'],
             'password' => $request->filled('password')
                             ? Hash::make($validated['password'])
                             : $user->password,

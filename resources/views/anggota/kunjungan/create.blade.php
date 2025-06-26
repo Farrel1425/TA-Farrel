@@ -45,13 +45,43 @@
             z-index: 1;
         }
 
-        .library-icon {
+        .school-logo {
             position: absolute;
-            top: -45px;
+            top: -80px;
             left: 50%;
             transform: translateX(-50%);
-            width: 70px;
-            height: 70px;
+            width: 150px;
+            height: 150px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            z-index: 10;
+            animation: logoFloat 3s ease-in-out infinite;
+        }
+
+        @keyframes logoFloat {
+            0%, 100% { transform: translateX(-50%) translateY(0px); }
+            50% { transform: translateX(-50%) translateY(-5px); }
+        }
+
+        .school-logo img {
+            width: 160px;
+            height: 160px;
+            object-fit: contain;
+            transition: transform 0.3s ease;
+            filter: drop-shadow(0 8px 16px rgba(0, 0, 0, 0.15)) drop-shadow(0 4px 8px rgba(0, 0, 0, 0.1));
+        }
+
+        .school-logo:hover img {
+            transform: scale(1.1);
+        }
+
+        .library-icon {
+            position: absolute;
+            top: -30px;
+            right: -15px;
+            width: 60px;
+            height: 60px;
             background: var(--success-gradient);
             border-radius: 50%;
             display: flex;
@@ -60,10 +90,16 @@
             box-shadow: 0 8px 25px rgba(17, 153, 142, 0.3);
             border: 3px solid rgba(255, 255, 255, 0.2);
             z-index: 10;
+            animation: pulse 2s ease-in-out infinite;
+        }
+
+        @keyframes pulse {
+            0%, 100% { transform: scale(1); }
+            50% { transform: scale(1.05); }
         }
 
         .library-icon i {
-            font-size: 2rem;
+            font-size: 1.5rem;
             color: white;
         }
 
@@ -81,7 +117,7 @@
             position: relative;
             overflow: visible;
             animation: slideUp 0.6s ease-out;
-            margin-top: 45px;
+            margin-top: 60px;
         }
 
         @keyframes slideUp {
@@ -108,9 +144,10 @@
         .card-header {
             background: transparent !important;
             border: none;
-            padding: 3.5rem 2rem 1.5rem;
+            padding: 4rem 2rem 0rem;
             text-align: center;
             position: relative;
+            margin-top: 30px;
         }
 
         .card-header h4 {
@@ -130,6 +167,15 @@
             font-size: 0.95rem;
             margin-top: 0.5rem;
             font-weight: 400;
+        }
+
+        .school-name {
+            color: rgba(255, 255, 255, 0.8);
+            font-size: 0.85rem;
+            margin-top: 0.25rem;
+            font-weight: 500;
+            text-transform: uppercase;
+            letter-spacing: 1px;
         }
 
         .card-body {
@@ -345,37 +391,61 @@
             .card {
                 max-width: 100%;
                 margin: 10px;
-                margin-top: 35px;
+                margin-top: 50px;
+            }
+
+            .school-logo {
+                width: 80px;
+                height: 80px;
+                top: -45px;
+            }
+
+            .school-logo img {
+                width: 80px;
+                height: 80px;
+            }
+
+            .library-icon {
+                width: 50px;
+                height: 50px;
+                top: -25px;
+                right: -10px;
+            }
+
+            .library-icon i {
+                font-size: 1.3rem;
             }
 
             .card-header {
-                padding: 3rem 1.5rem 1rem;
+                padding: 3.5rem 1.5rem 1rem;
             }
 
             .card-body {
                 padding: 1rem 1.5rem 2rem;
             }
-
-            .library-icon {
-                width: 60px;
-                height: 60px;
-                top: -30px;
-            }
-
-            .library-icon i {
-                font-size: 1.7rem;
-            }
         }
 
         @media (max-width: 320px) {
+            .school-logo {
+                width: 70px;
+                height: 70px;
+                top: -40px;
+            }
+
+            .school-logo img {
+                width: 70px;
+                height: 70px;
+            }
+
             .library-icon {
-                width: 50px;
-                height: 50px;
-                top: -25px;
+                width: 45px;
+                height: 45px;
+                top: -20px;
+                right: -8px;
             }
 
             .library-icon i {
-                font-size: 1.5rem;
+                font-size: 1.2rem;
             }
         }
     </style>
@@ -390,13 +460,23 @@
 
 <div class="form-wrapper">
     <div class="card">
+        <!-- School Logo -->
+        <div class="school-logo">
+            <img src="{{ asset('images/logo-smpk2-harapan.png') }}" alt="Logo SMP K 2 Harapan" onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';">
+            <div style="display: none; align-items: center; justify-content: center; width: 100%; height: 100%; color: #666; font-size: 1.5rem;">
+                <i class="fas fa-school"></i>
+            </div>
+        </div>
+
+        {{-- <!-- Library Icon -->
         <div class="library-icon">
             <i class="fas fa-book-reader"></i>
-        </div>
+        </div> --}}
 
         <div class="card-header">
             <h4>Form Kunjungan</h4>
-            <div class="subtitle">Perpustakaan SMP K 2 Harapan</div>
+            {{-- <div class="subtitle">Perpustakaan</div>
+            <div class="school-name">SMP K 2 Harapan</div> --}}
         </div>
 
         <div class="card-body">
@@ -434,7 +514,7 @@
                             name="nis"
                             id="nis"
                             class="form-control @error('nis') is-invalid @enderror"
-                            placeholder="Contoh: 1234567890"
+                            placeholder="Contoh: 8231"
                             value="{{ old('nis') }}"
                             autofocus
                             autocomplete="off"

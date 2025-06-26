@@ -23,12 +23,16 @@ class PeminjamanController extends Controller
     // Menampilkan form untuk membuat peminjaman baru
     public function create()
     {
-        // Ambil semua anggota dan buku yang stoknya masih tersedia
         $anggotas = Anggota::all();
-        $bukus = Buku::where('stok', '>', 0)->get();
-        return view('petugas.peminjaman.create', compact('anggotas', 'bukus'));
 
+        // Ambil hanya buku yang stok > 0 dan status 'Tersedia'
+        $bukus = Buku::where('stok', '>', 0)
+                    ->where('status_buku', 'Tersedia')
+                    ->get();
+
+        return view('petugas.peminjaman.create', compact('anggotas', 'bukus'));
     }
+
 
 
     // Menyimpan data peminjaman baru ke database
@@ -57,18 +61,28 @@ class PeminjamanController extends Controller
         // Simpan detail peminjaman (bisa banyak buku)
         foreach ($request->id_buku as $id_buku) {
             $buku = Buku::findOrFail($id_buku);
-            if ($buku->stok <= 0) return back()->withErrors("Stok buku '{$buku->judul}' habis.");
+
+            if ($buku->stok <= 0) {
+                return back()->withErrors("Stok buku '{$buku->judul}' habis.");
+            }
 
             // Kurangi stok buku
             $buku->decrement('stok');
 
-            // Simpan detail
+            // Cek dan ubah status jika stok jadi 0
+            if ($buku->stok <= 1) { // karena sudah didecrement
+                $buku->status_buku = 'Tidak Tersedia';
+                $buku->save();
+            }
+
+            // Simpan detail peminjaman
             PeminjamanDetail::create([
                 'id_peminjaman' => $peminjaman->id,
                 'id_buku' => $id_buku,
                 'status' => 'Dipinjam',
             ]);
         }
+
         return redirect()->route('petugas.peminjaman.index')->with('success', 'Peminjaman berhasil disimpan.');
     }
 

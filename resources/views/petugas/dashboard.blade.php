@@ -259,7 +259,7 @@
 
 /* Dashboard Header */
 .dashboard-header {
-    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    background: linear-gradient(135deg, #2563eb 0%, #f9fafb 100%);
     color: white;
     padding: 2rem;
     margin-bottom: 2rem;
@@ -292,6 +292,7 @@
     display: flex;
     gap: 2rem;
     align-items: center;
+    color: #2563eb;
 }
 
 .date-info, .time-info {

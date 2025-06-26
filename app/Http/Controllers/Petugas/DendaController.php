@@ -2,39 +2,45 @@
 
 namespace App\Http\Controllers\Petugas;
 
-use App\Models\Denda;
-use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
+use App\Models\Denda;
+use Carbon\Carbon;
+use Illuminate\Http\Request;
+
 
 class DendaController extends Controller
 {
-    public function index()
+   public function index()
     {
-        $dendas = Denda::with(['peminjaman.anggota', 'peminjaman.buku'])
+        $denda = Denda::with('peminjaman.anggota')
+            ->where('status_denda', 'Belum Lunas')
             ->latest()
             ->get();
-
-        return view('petugas.denda.index', compact('dendas'));
+        return view('petugas.denda.index', compact('denda'));
     }
 
     public function show($id)
     {
-        $denda = Denda::with(['peminjaman.anggota', 'peminjaman.buku'])->findOrFail($id);
+        $denda = Denda::with('peminjaman.details.buku', 'peminjaman.anggota', 'peminjaman.petugas')->findOrFail($id);
         return view('petugas.denda.show', compact('denda'));
     }
 
-    public function update(Request $request, $id)
+    public function lunasi($id)
     {
         $denda = Denda::findOrFail($id);
-
-        if ($denda->status_denda === 'Lunas') {
-            return redirect()->back()->with('info', 'Denda sudah lunas.');
-        }
-
         $denda->update([
             'status_denda' => 'Lunas',
+            'tanggal_pembayaran' => Carbon::now(),
         ]);
 
-        return redirect()->route('petugas.denda.index')->with('success', 'Denda berhasil dilunasi.');
+        return back()->with('success', 'Status denda berhasil diubah menjadi Lunas.');
     }
+
+    // public function exportPdf($id)
+    // {
+    //     $denda = Denda::with('peminjaman.details.buku', 'peminjaman.anggota', 'peminjaman.petugas')->findOrFail($id);
+    //     $pdf = Pdf::loadView('petugas.denda.export', compact('denda'));
+
+    //     return $pdf->download('denda-' . $denda->id . '.pdf');
+    // }
 }

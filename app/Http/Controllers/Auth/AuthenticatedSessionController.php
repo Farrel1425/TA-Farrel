@@ -21,29 +21,39 @@ class AuthenticatedSessionController extends Controller
 
     public function store(Request $request): RedirectResponse
     {
-        // Validasi input
         $request->validate([
             'login' => 'required|string',
             'password' => 'required|string',
         ]);
 
-        // Tentukan apakah 'login' berupa email atau username
-        $loginType = filter_var($request->login, FILTER_VALIDATE_EMAIL) ? 'email' : 'username';
+        $loginType = 'username';
 
-        // Persiapkan kredensial login
         $credentials = [
             $loginType => $request->login,
             'password' => $request->password,
         ];
 
-        // Proses login
         if (Auth::attempt($credentials, $request->boolean('remember'))) {
             $request->session()->regenerate();
-
-            // Ambil user yang login
             $user = Auth::user();
 
-            // Arahkan berdasarkan level_user
+            // ❌ Cek status aktif petugas
+            if ($user->level_user === 'petugas' && optional($user->petugas)->status !== 'Aktif') {
+                Auth::logout();
+                return redirect()->route('login')->withErrors([
+                    'login' => 'Akun petugas Anda sedang tidak aktif.',
+                ]);
+            }
+
+            // ❌ Cek status aktif anggota
+            if ($user->level_user === 'anggota' && optional($user->anggota)->status_anggota !== 'Aktif') {
+                Auth::logout();
+                return redirect()->route('login')->withErrors([
+                    'login' => 'Akun anggota Anda sedang tidak aktif.',
+                ]);
+            }
+
+            // ✅ Redirect sesuai role
             switch ($user->level_user) {
                 case 'admin':
                     return redirect()->intended('/dashboard-admin');
@@ -59,11 +69,11 @@ class AuthenticatedSessionController extends Controller
             }
         }
 
-        // Gagal login
         return back()->withErrors([
-            'login' => 'Login gagal. Email/Username atau Password salah.',
+            'login' => 'Login gagal. Username atau Password salah.',
         ]);
     }
+
     /**
      * Destroy an authenticated session.
      */
